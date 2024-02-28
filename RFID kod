@@ -6,7 +6,7 @@ int ss_pin = 10;
 int servo_pin = 8;                       
 Servo motor;                              
 MFRC522 rfid(ss_pin, reset_pin);           
-byte ID[4] = {97, 76, 67, 9};          
+byte ID[4] = {0, 0, 0, 0};        //kendi RFID'nizin ID'sini öğrenmek için ekranyazdir fonksiyonunu kullanıp daha sonrasında bu kısıma ID'nizi girmeniz gerekiyor.
 
 void setup() { 
   motor.attach(servo_pin);                 
