@@ -1,0 +1,30 @@
+#include <NewPing.h>
+#include <Servo.h>
+#define trig_pin 2 
+#define echo_pin 3
+#define max_distance 30  
+int servo_pin = 8; 
+Servo motor; 
+
+NewPing sonar(trig_pin, echo_pin, max_distance);
+float duration, distance;
+
+void setup() 
+{ 
+   motor.attach(servo_pin); 
+}
+void loop() 
+{  
+  distance = sonar.ping_cm();
+   
+  if (distance >= 30 || distance <= 0) 
+  {
+    motor.write(0);
+    delay(1000);
+  }
+  else 
+  {
+    motor.write(180);
+    delay(7000);   
+  }  
+}
