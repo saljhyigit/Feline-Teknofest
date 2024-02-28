@@ -1,0 +1,51 @@
+#include <SPI.h>                         
+#include <MFRC522.h>                      
+#include <Servo.h>                       
+int reset_pin = 9;                          
+int ss_pin = 10;                          
+int servo_pin = 8;                       
+Servo motor;                              
+MFRC522 rfid(ss_pin, reset_pin);           
+byte ID[4] = {97, 76, 67, 9};          
+
+void setup() { 
+  motor.attach(servo_pin);                 
+  Serial.begin(9600);                     
+  SPI.begin();                            
+  rfid.PCD_Init();                        
+}
+ 
+void loop() {
+
+  if ( ! rfid.PICC_IsNewCardPresent())    
+    return;
+
+  if ( ! rfid.PICC_ReadCardSerial())      
+    return;
+
+  if (rfid.uid.uidByte[0] == ID[0] &&    
+    rfid.uid.uidByte[1] == ID[1] && 
+    rfid.uid.uidByte[2] == ID[2] && 
+    rfid.uid.uidByte[3] == ID[3] ) {
+        Serial.println("Kapı açıldı");
+        ekranyazdir();
+        motor.write(180);                
+        delay(10000);
+        motor.write(0);                   
+        delay(1000);
+    }
+    else{                                 
+      Serial.println("Yetkisiz Kart");
+      ekranyazdir();
+    }
+  rfid.PICC_HaltA();
+}
+void ekranyazdir(){
+  Serial.print("ID Numarası: ");
+  for(int sayac = 0; sayac < 4; sayac++){
+    Serial.print(rfid.uid.uidByte[sayac]);
+    Serial.print(" ");
+  }
+  Serial.println("");
+}
+
